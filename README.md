@@ -2,201 +2,258 @@
 
 ---
 
-# 1. Membuka & Menutup File
-
-### Fungsi:
-- `fopen()`
-- `fclose()`
-
-### Contoh:
+# 1. Membuka & Menutup File (`fopen`, `fclose`)
+**`fopen()` membuka file, `fclose()` menutup file.**
 
 ```c
-FILE *fp = fopen("data.txt", "r");   // membuka file untuk dibaca
+#include <stdio.h>
 
-if (fp == NULL) {
-    printf("File tidak ditemukan\n");
+int main() {
+    FILE *fp = fopen("data.txt", "r");   // membuka file untuk dibaca
+
+    if (fp == NULL) {
+        printf("File tidak ditemukan
+");
+        return 0;
+    }
+
+    printf("File berhasil dibuka!
+");
+
+    fclose(fp);    // menutup file
     return 0;
 }
-
-printf("File berhasil dibuka!\n");
-
-fclose(fp);    // menutup file
 ```
-
-### Mode `fopen()`:
-
-| Mode | Arti |
-|------|------|
-| "r" | read (file harus ada) |
-| "w" | write (buat file baru, hapus isi lama) |
-| "a" | append (tulis di akhir file) |
-| "r+" | read + write |
-| "w+" | read + write (overwrite file) |
-| "a+" | read + write (mulai dari akhir file) |
 
 ---
 
 # 2. Membaca Karakter per Karakter (`fgetc`)
+**`fgetc()` membaca 1 karakter dari file.**
 
 ```c
-FILE *fp = fopen("data.txt", "r");
+#include <stdio.h>
 
-char c;
-while ((c = fgetc(fp)) != EOF) {
-    printf("%c", c);
+int main() {
+    FILE *fp = fopen("data.txt", "r");
+    if (!fp) return 0;
+
+    int c;
+    while ((c = fgetc(fp)) != EOF) {
+        putchar(c);
+    }
+
+    fclose(fp);
+    return 0;
 }
-
-fclose(fp);
 ```
 
 ---
 
-# 3. Menulis Karakter ke File (`fputc`)
+# 3. Menulis Karakter per Karakter (`fputc`)
+**`fputc()` menulis 1 karakter ke file.**
 
 ```c
-FILE *fp = fopen("output.txt", "w");
+#include <stdio.h>
 
-fputc('A', fp);
-fputc('\n', fp);
-fputc('Z', fp);
+int main() {
+    FILE *fp = fopen("output.txt", "w");
+    if (!fp) return 0;
 
-fclose(fp);
+    fputc('A', fp);
+    fputc('\n', fp);
+    fputc('Z', fp);
+
+    fclose(fp);
+    return 0;
+}
 ```
 
 ---
 
 # 4. Membaca Satu Baris (`fgets`)
+**`fgets()` membaca 1 baris string dari file.**
 
 ```c
-FILE *fp = fopen("data.txt", "r");
+#include <stdio.h>
 
-char buffer[100];
+int main() {
+    FILE *fp = fopen("data.txt", "r");
+    if (!fp) return 0;
 
-while (fgets(buffer, sizeof(buffer), fp)) {
-    printf("Baris: %s", buffer);
+    char buffer[100];
+
+    while (fgets(buffer, sizeof(buffer), fp)) {
+        printf("Baris: %s", buffer);
+    }
+
+    fclose(fp);
+    return 0;
 }
-
-fclose(fp);
 ```
 
 ---
 
 # 5. Menulis Satu Baris (`fputs`)
+**`fputs()` menulis string (tanpa format) ke file.**
 
 ```c
-FILE *fp = fopen("output.txt", "w");
+#include <stdio.h>
 
-fputs("Halo dunia!\n", fp);
-fputs("Belajar file handling.", fp);
+int main() {
+    FILE *fp = fopen("output.txt", "w");
+    if (!fp) return 0;
 
-fclose(fp);
+    fputs("Halo dunia!\n", fp);
+    fputs("Belajar file handling.\n", fp);
+
+    fclose(fp);
+    return 0;
+}
 ```
 
 ---
 
 # 6. Membaca Data Terformat (`fscanf`)
+**`fscanf()` membaca data sesuai format seperti integer, string, float, dll.**
 
 ```c
-FILE *fp = fopen("data.txt", "r");
+#include <stdio.h>
 
-int age;
-char name[50];
+int main() {
+    FILE *fp = fopen("data.txt", "r");
+    if (!fp) return 0;
 
-fscanf(fp, "%d %s", &age, name);
+    int age;
+    char name[50];
 
-printf("Nama: %s, Umur: %d\n", name, age);
+    fscanf(fp, "%d %s", &age, name);
 
-fclose(fp);
+    printf("Nama: %s, Umur: %d\n", name, age);
+
+    fclose(fp);
+    return 0;
+}
 ```
 
 ---
 
 # 7. Menulis Data Terformat (`fprintf`)
+**`fprintf()` menulis data dengan format ke file.**
 
 ```c
-FILE *fp = fopen("output.txt", "w");
+#include <stdio.h>
 
-int age = 21;
-char name[] = "Lili";
+int main() {
+    FILE *fp = fopen("output.txt", "w");
+    if (!fp) return 0;
 
-fprintf(fp, "Nama: %s, Umur: %d\n", name, age);
+    int age = 21;
+    char name[] = "Lili";
 
-fclose(fp);
+    fprintf(fp, "Nama: %s, Umur: %d\n", name, age);
+
+    fclose(fp);
+    return 0;
+}
 ```
 
 ---
 
 # 8. Membaca File Binary (`fread`)
+**`fread()` membaca data biner dalam bentuk blok (struct, array, dll).**
 
 ```c
+#include <stdio.h>
+
 struct Data {
     int id;
     float nilai;
 };
 
-FILE *fp = fopen("data.bin", "rb");
+int main() {
+    FILE *fp = fopen("data.bin", "rb");
+    if (!fp) return 0;
 
-struct Data d;
+    struct Data d;
 
-fread(&d, sizeof(struct Data), 1, fp);
+    fread(&d, sizeof(struct Data), 1, fp);
 
-printf("ID: %d, Nilai: %.2f\n", d.id, d.nilai);
+    printf("ID: %d\nNilai: %.2f\n", d.id, d.nilai);
 
-fclose(fp);
+    fclose(fp);
+    return 0;
+}
 ```
 
 ---
 
 # 9. Menulis File Binary (`fwrite`)
+**`fwrite()` menulis data biner ke file. Biasanya untuk struct.**
 
 ```c
+#include <stdio.h>
+
 struct Data {
     int id;
     float nilai;
 };
 
-struct Data d = {101, 95.5};
+int main() {
+    struct Data d = {101, 95.5};
 
-FILE *fp = fopen("data.bin", "wb");
+    FILE *fp = fopen("data.bin", "wb");
+    if (!fp) return 0;
 
-fwrite(&d, sizeof(struct Data), 1, fp);
+    fwrite(&d, sizeof(struct Data), 1, fp);
 
-fclose(fp);
+    fclose(fp);
+    return 0;
+}
 ```
 
 ---
 
-# 10. Demo Lengkap: Copy File Baris per Baris
+# 10. Demo Copy File Baris per Baris
+**Gabungan: `fgets()` → `fprintf()` untuk copy isi file.**
 
 ```c
-FILE *in = fopen("input.txt", "r");
-FILE *out = fopen("output.txt", "w");
+#include <stdio.h>
 
-char line[200];
+int main() {
+    FILE *in = fopen("input.txt", "r");
+    FILE *out = fopen("output.txt", "w");
 
-while (fgets(line, sizeof(line), in)) {
-    fprintf(out, "Copy: %s", line);
+    if (!in || !out) return 0;
+
+    char line[200];
+
+    while (fgets(line, sizeof(line), in)) {
+        fprintf(out, "Copy: %s", line);
+    }
+
+    fclose(in);
+    fclose(out);
+
+    return 0;
 }
-
-fclose(in);
-fclose(out);
 ```
 
 ---
 
-# Ringkasan Singkat Per Fungsi
+# Ringkasan Fungsi
 
 | Fungsi | Keterangan |
 |--------|------------|
-| fgetc() | baca 1 karakter |
-| fputc() | tulis 1 karakter |
-| fgets() | baca 1 baris |
-| fputs() | tulis 1 baris |
-| fscanf() | baca data terformat |
-| fprintf() | tulis data terformat |
-| fread() | baca binary (block data) |
-| fwrite() | tulis binary |
+| `fgetc()` | baca 1 karakter |
+| `fputc()` | tulis 1 karakter |
+| `fgets()` | baca 1 baris |
+| `fputs()` | tulis string |
+| `fscanf()` | baca data terformat |
+| `fprintf()` | tulis data terformat |
+| `fread()` | baca binary |
+| `fwrite()` | tulis binary |
 
 ---
 
 # Selesai!
+
